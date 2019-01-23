@@ -30,6 +30,8 @@
     (\"sed\" \"s/[^0-9]\\+/ /g\")
     (\"wc\" \"-w\"))
 "
+  (when (stringp (car cmd-series))
+    (setq cmd-series (list cmd-series)))
   `(defun ,(intern (format "command-filter-%s" name)) ()
      "This function was made by `define-command-filter'"
      (interactive)
