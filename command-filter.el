@@ -63,6 +63,8 @@
 ;;
 ;; (define-command-filter test-filter-5-1 ("ghc" "-e" "interact (map Data.Char.toUpper)"))
 ;;
+;; (define-command-filter test-filter-6-1 ("perl" "-pe" "$_ = uc $_"))
+;;
 ;; ;; There are special macros for some commands.
 ;;
 ;; (define-sed-filter test-filter-1-2 "s/.*/\\L&/")
@@ -70,7 +72,7 @@
 ;; (define-awk-filter test-filter-2-2 "{print tolower($0)}")
 ;;
 ;; (define-python-filter test-filter-3-2 "-c" "
-;; import sys;
+;; import sys
 ;; for line in sys.stdin:
 ;;     print(line.lower(), end='')
 ;; ")
@@ -78,6 +80,8 @@
 ;; (define-ruby-filter test-filter-4-2 "-p" "-e" "$_.downcase!")
 ;;
 ;; (define-ghc-filter test-filter-5-2 "-e" "interact (map Data.Char.toLower)")
+;;
+;; (define-perl-filter test-filter-6-2 "-pe" "$_ = lc $_")
 ;;
 
 ;;; Code:
@@ -168,6 +172,13 @@ OPTIONS are passed to the program."
 NAME used by filter name like command-filter-NAME
 OPTIONS are passed to the program."
   `(define-command-filter ,name "ghc" ,@options))
+
+(defmacro define-perl-filter (name &rest options)
+  "Define perl filter command.
+
+NAME used by filter name like command-filter-NAME
+OPTIONS are passed to the program."
+  `(define-command-filter ,name "perl" ,@options))
 
 (provide 'command-filter)
 ;;; command-filter.el ends here

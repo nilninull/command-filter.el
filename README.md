@@ -16,7 +16,7 @@ Define filter commands like these.
 ```
 You can specify multiple commands like shell pipes behavior.
 ```emacs-lisp
-(define-command-filter test-filter-multi
+(define-command-filter test-filter-multi-1
   ("awk" "-F	" "{print $3}")
   ("sed" "s/.*/\\u&/"))
 ```
@@ -43,6 +43,8 @@ And some other language examples.
 (define-command-filter test-filter-4-1 ("ruby" "-p" "-e" "$_.upcase!"))
 
 (define-command-filter test-filter-5-1 ("ghc" "-e" "interact (map Data.Char.toUpper)"))
+
+(define-command-filter test-filter-6-1 ("perl" "-pe" "$_ = uc $_"))
 ```
 There are special macros for some commands.
 ```emacs-lisp
@@ -59,4 +61,6 @@ for line in sys.stdin:
 (define-ruby-filter test-filter-4-2 "-p" "-e" "$_.downcase!")
 
 (define-ghc-filter test-filter-5-2 "-e" "interact (map Data.Char.toLower)")
+
+(define-perl-filter test-filter-6-2 "-pe" "$_ = lc $_")
 ```
