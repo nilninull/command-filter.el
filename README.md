@@ -33,7 +33,7 @@ You can use multiline arguments.
 
 ```emacs-lisp
 (define-command-filter test-filter-3-1 "python" "-c" "
-import sys;
+import sys
 for line in sys.stdin:
     print(line.upper(), end='')
 ")
@@ -42,9 +42,11 @@ And some other language examples.
 ```emacs-lisp
 (define-command-filter test-filter-4-1 ("ruby" "-p" "-e" "$_.upcase!"))
 
-(define-command-filter test-filter-5-1 ("ghc" "-e" "interact (map Data.Char.toUpper)"))
+(define-command-filter test-filter-5-1 "ghc" "-e" "interact (map Data.Char.toUpper)")
 
 (define-command-filter test-filter-6-1 ("perl" "-pe" "$_ = uc $_"))
+
+(define-command-filter test-filter-7-1 "lua" "-e" "for line in io.lines() do print(line:upper()) end")
 ```
 There are special macros for some commands.
 ```emacs-lisp
@@ -53,7 +55,7 @@ There are special macros for some commands.
 (define-awk-filter test-filter-2-2 "{print tolower($0)}")
 
 (define-python-filter test-filter-3-2 "-c" "
-import sys;
+import sys
 for line in sys.stdin:
     print(line.lower(), end='')
 ")
@@ -63,4 +65,6 @@ for line in sys.stdin:
 (define-ghc-filter test-filter-5-2 "-e" "interact (map Data.Char.toLower)")
 
 (define-perl-filter test-filter-6-2 "-pe" "$_ = lc $_")
+
+(define-lua-filter test-filter-7-2 "-e" "for line in io.lines() do print(line:lower()) end")
 ```

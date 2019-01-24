@@ -52,7 +52,7 @@
 ;; ;; You can use multiline arguments.
 ;;
 ;; (define-command-filter test-filter-3-1 "python" "-c" "
-;; import sys;
+;; import sys
 ;; for line in sys.stdin:
 ;;     print(line.upper(), end='')
 ;; ")
@@ -61,9 +61,11 @@
 ;;
 ;; (define-command-filter test-filter-4-1 ("ruby" "-p" "-e" "$_.upcase!"))
 ;;
-;; (define-command-filter test-filter-5-1 ("ghc" "-e" "interact (map Data.Char.toUpper)"))
+;; (define-command-filter test-filter-5-1 "ghc" "-e" "interact (map Data.Char.toUpper)")
 ;;
 ;; (define-command-filter test-filter-6-1 ("perl" "-pe" "$_ = uc $_"))
+;;
+;; (define-command-filter test-filter-7-1 "lua" "-e" "for line in io.lines() do print(line:upper()) end")
 ;;
 ;; ;; There are special macros for some commands.
 ;;
@@ -82,6 +84,8 @@
 ;; (define-ghc-filter test-filter-5-2 "-e" "interact (map Data.Char.toLower)")
 ;;
 ;; (define-perl-filter test-filter-6-2 "-pe" "$_ = lc $_")
+;; 
+;; (define-lua-filter test-filter-7-2 "-e" "for line in io.lines() do print(line:lower()) end")
 ;;
 
 ;;; Code:
@@ -180,6 +184,13 @@ OPTIONS are passed to the program."
 NAME used by filter name like command-filter-NAME
 OPTIONS are passed to the program."
   `(define-command-filter ,name "perl" ,@options))
+
+(defmacro define-lua-filter (name &rest options)
+  "Define lua filter command.
+
+NAME used by filter name like command-filter-NAME
+OPTIONS are passed to the program."
+  `(define-command-filter ,name "lua" ,@options))
 
 (provide 'command-filter)
 ;;; command-filter.el ends here
