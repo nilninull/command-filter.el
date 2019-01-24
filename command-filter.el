@@ -36,13 +36,18 @@
 ;;
 ;; ;; You can specify multiple commands like shell pipes behavior.
 ;;
-;; (define-command-filter test-filter-multi
+;; (define-command-filter test-filter-multi-1
 ;;   ("awk" "-F	" "{print $3}")
 ;;   ("sed" "s/.*/\\u&/"))
 ;;
-;; ;; If you use only one command, you can omit parentheses.
+;; ;; You can omit parentheses, if you like.
 ;;
 ;; (define-command-filter test-filter-2-1 "awk" "{print toupper($0)}")
+;;
+;; ;; And you can specify multiple commands split by pipe *symbol*.
+;;
+;; (define-command-filter test-filter-multi-2
+;;   "awk" "-F	" "{print $3}" | "sed" "s/.*/\\u&/")
 ;;
 ;; ;; You can use multiline arguments.
 ;;
@@ -80,13 +85,17 @@
 (defmacro define-command-filter (name &rest cmd-series)
   "Define new command filter.
 
-NAME used by filter name like command-filter-NAME
+NAME used by filter name like command-filter-NAME.
 CMD-SERIES is a list of shell command lists or shell command lists.
 
 If you want to see an example, please read the comment of the program."
 
   (when (stringp (car cmd-series))
-    (setq cmd-series (list cmd-series)))
+    (setq cmd-series (cl-labels ((split-by-pipe (cmds)
+                                                (if-let ((i (cl-position '| cmds)))
+                                                    (cons (seq-take cmds i) (split-by-pipe (seq-drop cmds (1+ i))))
+                                                  (list cmds))))
+                       (split-by-pipe cmd-series))))
   `(defun ,(intern (format "command-filter-%s" name)) ()
      "This filter program affects the region when the region is active,
 and the entire buffer when the region is inactive.
