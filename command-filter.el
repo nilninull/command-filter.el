@@ -85,6 +85,7 @@
 ;;
 
 ;;; Code:
+(eval-when-compile (require 'subr-x))
 
 (defmacro define-command-filter (name &rest cmd-series)
   "Define new command filter.
