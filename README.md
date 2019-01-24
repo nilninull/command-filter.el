@@ -20,9 +20,14 @@ You can specify multiple commands like shell pipes behavior.
   ("awk" "-F	" "{print $3}")
   ("sed" "s/.*/\\u&/"))
 ```
-If you use only one command, you can omit parentheses.
+You can omit parentheses, if you like.
 ```emacs-lisp
 (define-command-filter test-filter-2-1 "awk" "{print toupper($0)}")
+```
+And you can specify multiple commands split by pipe **symbol**.
+```emacs-lisp
+(define-command-filter test-filter-multi-2
+  "awk" "-F	" "{print $3}" | "sed" "s/.*/\\u&/")
 ```
 You can use multiline arguments.
 
