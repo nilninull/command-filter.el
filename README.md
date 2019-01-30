@@ -1,7 +1,7 @@
 # command-filter.el
 Emacs utilty macros for making text filter by unix commands.
 
-Emacs has `shell-command-on-region', but using a long command over
+Emacs has `shell-command-on-region`, but using a long command over
 and over is troublesome.
 
 That's why I wrote this program.
@@ -73,15 +73,15 @@ for line in sys.stdin:
 This macro defines a function that takes a string as an argument
 and returns a string processed by the command.
 
-This `define-pipe-filter' macro may not be used.  However, I made
+This `define-pipe-filter` macro may not be used.  However, I made
 it because it can be created as it is with the mechanism of
-`define-command-filter' macro.
+`define-command-filter` macro.
 
 ```emacs-lisp
 (define-pipe-filter test-filter-8 "awk" "-F," "$1~/TARGET/{print $2}" | "sort" | "uniq" "-c")
 ```
 
-If :chomp keyword specified, remove newline charactors from end of output.
+If `:chomp` keyword specified, remove newline charactors from end of output.
 
 ```emacs-lisp
 (define-pipe-filter test-filter-9 :chomp "awk" "-F," "$1~/TARGET/{print $2}" | "sort" "-u" | "wc" "-l")
