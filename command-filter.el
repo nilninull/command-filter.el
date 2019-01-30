@@ -29,7 +29,7 @@
 ;; This filter program affects the region when the region is active,
 ;; and the entire buffer when the region is inactive.
 ;;
-;;; Examples
+;;; Examples:
 ;; ;; Define filter commands like these.
 ;;
 ;; (define-command-filter test-filter-1-1 ("sed" "s/.*/\\U&/"))
@@ -92,7 +92,7 @@
 (eval-when-compile (require 'subr-x))
 
 (defmacro define-command-filter (name &rest cmd-series)
-  "Define new command filter.
+  "Define new command-filter.
 
 NAME used by filter name like command-filter--NAME.
 CMD-SERIES is a list of shell command lists or shell command lists.
