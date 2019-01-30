@@ -68,3 +68,21 @@ for line in sys.stdin:
 
 (define-lua-filter test-filter-7-2 "-e" "for line in io.lines() do print(line:lower()) end")
 ```
+
+## Appendix
+This macro defines a function that takes a string as an argument
+and returns a string processed by the command.
+
+This `define-pipe-filter' macro may not be used.  However, I made
+it because it can be created as it is with the mechanism of
+`define-command-filter' macro.
+
+```emacs-lisp
+(define-pipe-filter test-filter-8 "awk" "-F," "$1~/TARGET/{print $2}" | "sort" | "uniq" "-c")
+```
+
+If :chomp keyword specified, remove newline charactors from end of output.
+
+```emacs-lisp
+(define-pipe-filter test-filter-9 :chomp "awk" "-F," "$1~/TARGET/{print $2}" | "sort" "-u" | "wc" "-l")
+```

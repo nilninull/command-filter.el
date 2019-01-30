@@ -87,6 +87,16 @@
 ;; 
 ;; (define-lua-filter test-filter-7-2 "-e" "for line in io.lines() do print(line:lower()) end")
 ;;
+;;; Appendix:
+;; ;; This macro defines a function that takes a string as an argument
+;; ;; and returns a string processed by the command.
+;;
+;; (define-pipe-filter test-filter-8 "awk" "-F," "$2~/TARGET/{print $3}" | "sort" | "uniq" "-c")
+;;
+;; ;; If :chomp keyword specified, remove newline charactors from end
+;; ;; of output.
+;;
+;; (define-pipe-filter test-filter-8 :chomp "awk" "-F," "$2~/TARGET/{print $3}" | "sort" | "uniq" | "wc" "-l")
 
 ;;; Code:
 (eval-when-compile (require 'subr-x))
@@ -191,6 +201,61 @@ OPTIONS are passed to the program."
 NAME used by filter name like command-filter--NAME
 OPTIONS are passed to the program."
   `(define-command-filter ,name "lua" ,@options))
+
+;;; Appendix
+;; This `define-pipe-filter' macro may not be used.  However, I
+;; made it because it can be created as it is with the mechanism of
+;; `define-command-filter' macro.
+
+(defmacro define-pipe-filter (name &rest cmd-series)
+  "Define new pipe-filter.
+
+pipe-filter pass the argument strings to the CMD-SERIES
+processes, and return process's output strings.
+
+NAME used by filter name like pipe-filter--NAME.
+CMD-SERIES is a list of shell command lists or shell command lists.
+
+If :chomp keyword appeared in CMD-SERIES, return strings remove
+newline charactors from end of string.
+
+If you want to see an example, please read the comment of the program."
+
+  (let ((chomp (when (memq :chomp cmd-series)
+                 (setq cmd-series (delq :chomp cmd-series))
+                 t)))
+    (when (stringp (car cmd-series))
+      (setq cmd-series (cl-labels ((split-by-pipe (cmds)
+                                                  (if-let ((i (cl-position '| cmds)))
+                                                      (cons (seq-take cmds i) (split-by-pipe (seq-drop cmds (1+ i))))
+                                                    (list cmds))))
+                         (split-by-pipe cmd-series))))
+    `(defun ,(intern (format "pipe-filter--%s" name)) (str)
+       "This function processes the argument string with commands.
+
+This function was made by `define-pipe-filter' macro."
+       (let ((temp-files (cl-loop repeat ,(1+ (length cmd-series))
+                                  collect (make-temp-file ".pipe-filter-")))
+             (cmd-series ',cmd-series))
+         (unwind-protect
+             (with-temp-buffer
+               (insert str)
+               (write-region (point-min) (point-max) (car temp-files))
+               (delete-region (point-min) (point-max))
+
+               (insert-file-contents
+                (cl-labels ((do-process (in out)
+                                        (cl-destructuring-bind (cmd . args) (pop cmd-series)
+                                          (apply #'call-process cmd in (list :file out) nil args))
+                                        out))
+                  (cl-reduce #'do-process temp-files)))
+               ,(when chomp
+                  `(progn
+                     (goto-char (point-max))
+                     (while (= (preceding-char) ?\n) (delete-char -1))))
+               (buffer-string))
+           (dolist (file temp-files)
+             (delete-file file)))))))
 
 (provide 'command-filter)
 ;;; command-filter.el ends here
