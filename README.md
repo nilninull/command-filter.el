@@ -86,3 +86,8 @@ If `:chomp` keyword specified, remove newline charactors from end of output.
 ```emacs-lisp
 (define-pipe-filter test-filter-9 :chomp "awk" "-F," "$1~/TARGET/{print $2}" | "sort" "-u" | "wc" "-l")
 ```
+The function made by this macro can work without a input string depending on the command defined.
+
+```emacs-lisp
+(define-pipe-filter test-filter-9 :chomp "date")
+```

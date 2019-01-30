@@ -97,6 +97,11 @@
 ;; ;; of output.
 ;;
 ;; (define-pipe-filter test-filter-8 :chomp "awk" "-F," "$2~/TARGET/{print $3}" | "sort" | "uniq" | "wc" "-l")
+;;
+;; ;; The function made by this macro can work without a input string
+;; ;; depending on the command defined.
+;;
+;; (define-pipe-filter test-filter-9 :chomp "date")
 
 ;;; Code:
 (eval-when-compile (require 'subr-x))
@@ -230,8 +235,10 @@ If you want to see an example, please read the comment of the program."
                                                       (cons (seq-take cmds i) (split-by-pipe (seq-drop cmds (1+ i))))
                                                     (list cmds))))
                          (split-by-pipe cmd-series))))
-    `(defun ,(intern (format "pipe-filter--%s" name)) (str)
-       "This function processes the argument string with commands.
+    `(defun ,(intern (format "pipe-filter--%s" name)) (&optional str)
+       "This function processes STR with commands.
+
+Depending on the command defined, this function will work without an input string.
 
 This function was made by `define-pipe-filter' macro."
        (let ((temp-files (cl-loop repeat ,(1+ (length cmd-series))
@@ -239,9 +246,10 @@ This function was made by `define-pipe-filter' macro."
              (cmd-series ',cmd-series))
          (unwind-protect
              (with-temp-buffer
-               (insert str)
-               (write-region (point-min) (point-max) (car temp-files))
-               (delete-region (point-min) (point-max))
+               (when str
+                 (insert str)
+                 (write-region (point-min) (point-max) (car temp-files))
+                 (delete-region (point-min) (point-max)))
 
                (insert-file-contents
                 (cl-labels ((do-process (in out)
