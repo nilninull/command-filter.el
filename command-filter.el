@@ -94,7 +94,7 @@
 (defmacro define-command-filter (name &rest cmd-series)
   "Define new command filter.
 
-NAME used by filter name like command-filter-NAME.
+NAME used by filter name like command-filter--NAME.
 CMD-SERIES is a list of shell command lists or shell command lists.
 
 If you want to see an example, please read the comment of the program."
@@ -105,14 +105,14 @@ If you want to see an example, please read the comment of the program."
                                                     (cons (seq-take cmds i) (split-by-pipe (seq-drop cmds (1+ i))))
                                                   (list cmds))))
                        (split-by-pipe cmd-series))))
-  `(defun ,(intern (format "command-filter-%s" name)) ()
+  `(defun ,(intern (format "command-filter--%s" name)) ()
      "This filter program affects the region when the region is active,
 and the entire buffer when the region is inactive.
 
 This function was made by `define-command-filter' macro."
      (interactive)
      (let ((temp-files (cl-loop repeat ,(1+ (length cmd-series))
-                                collect (make-temp-file "command-filter-")))
+                                collect (make-temp-file ".command-filter-")))
            (cmd-series ',cmd-series)
            beg end)
 
@@ -146,49 +146,49 @@ This function was made by `define-command-filter' macro."
 (defmacro define-sed-filter (name &rest options)
   "Define sed filter command.
 
-NAME used by filter name like command-filter-NAME
+NAME used by filter name like command-filter--NAME
 OPTIONS are passed to the program."
   `(define-command-filter ,name "sed" ,@options))
 
 (defmacro define-awk-filter (name &rest options)
   "Define awk filter command.
 
-NAME used by filter name like command-filter-NAME
+NAME used by filter name like command-filter--NAME
 OPTIONS are passed to the program."
   `(define-command-filter ,name "awk" ,@options))
 
 (defmacro define-python-filter (name &rest options)
   "Define python filter command.
 
-NAME used by filter name like command-filter-NAME
+NAME used by filter name like command-filter--NAME
 OPTIONS are passed to the program."
   `(define-command-filter ,name "python" ,@options))
 
 (defmacro define-ruby-filter (name &rest options)
   "Define ruby filter command.
 
-NAME used by filter name like command-filter-NAME
+NAME used by filter name like command-filter--NAME
 OPTIONS are passed to the program."
   `(define-command-filter ,name "ruby" ,@options))
 
 (defmacro define-ghc-filter (name &rest options)
   "Define ghc filter command.
 
-NAME used by filter name like command-filter-NAME
+NAME used by filter name like command-filter--NAME
 OPTIONS are passed to the program."
   `(define-command-filter ,name "ghc" ,@options))
 
 (defmacro define-perl-filter (name &rest options)
   "Define perl filter command.
 
-NAME used by filter name like command-filter-NAME
+NAME used by filter name like command-filter--NAME
 OPTIONS are passed to the program."
   `(define-command-filter ,name "perl" ,@options))
 
 (defmacro define-lua-filter (name &rest options)
   "Define lua filter command.
 
-NAME used by filter name like command-filter-NAME
+NAME used by filter name like command-filter--NAME
 OPTIONS are passed to the program."
   `(define-command-filter ,name "lua" ,@options))
 
