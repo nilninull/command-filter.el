@@ -89,5 +89,5 @@ If `:chomp` keyword specified, remove newline charactors from end of output.
 The function made by this macro can work without a input string depending on the command defined.
 
 ```emacs-lisp
-(define-pipe-filter test-filter-9 :chomp "date")
+(define-pipe-filter test-filter-10 :chomp "date")
 ```

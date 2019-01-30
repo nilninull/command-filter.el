@@ -96,12 +96,12 @@
 ;; ;; If :chomp keyword specified, remove newline charactors from end
 ;; ;; of output.
 ;;
-;; (define-pipe-filter test-filter-8 :chomp "awk" "-F," "$2~/TARGET/{print $3}" | "sort" | "uniq" | "wc" "-l")
+;; (define-pipe-filter test-filter-9 :chomp "awk" "-F," "$2~/TARGET/{print $3}" | "sort" | "uniq" | "wc" "-l")
 ;;
 ;; ;; The function made by this macro can work without a input string
 ;; ;; depending on the command defined.
 ;;
-;; (define-pipe-filter test-filter-9 :chomp "date")
+;; (define-pipe-filter test-filter-10 :chomp "date")
 
 ;;; Code:
 (eval-when-compile (require 'subr-x))
